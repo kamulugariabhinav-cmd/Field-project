@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0a0e1a" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<link rel="icon" type="image/svg+xml" href="shield.svg" />
+<title>VoiceGuard — Real-Time Deepfake Voice Detection</title>
+<link rel="stylesheet" href="app/styles.css?v=12" />
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <img src="shield.svg" width="34" height="34" alt="VoiceGuard" />
+      <div>
+        <h1>VoiceGuard</h1>
+        <p>Real-time on-device deepfake voice detection</p>
+      </div>
+    </div>
+    <div class="badges">
+      <span class="badge badge-privacy">🔒 100% On-Device</span>
+      <span class="badge" id="latencyBadge">⚡ &lt;300ms latency</span>
+      <span class="badge">🧠 Spectro-temporal engine</span>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- LEFT: analyzer -->
+    <section class="panel analyzer" id="analyzerPanel">
+      <div class="panel-head">
+        <h2>Live Analyzer</h2>
+        <div class="head-right">
+          <button class="btn-stop" id="stopBtn" title="Stop playback">■ Stop</button>
+          <span class="pill pill-off" id="statusPill">○ READY</span>
+        </div>
+      </div>
+
+      <div class="now-playing" id="nowPlaying">
+        <div class="np-avatar" id="npAvatar">🎧</div>
+        <div class="np-info">
+          <div class="np-name" id="npName">No clip selected</div>
+          <div class="np-meta" id="npMeta">Click any voice to hear it speak — VoiceGuard scores it live</div>
+        </div>
+      </div>
+
+      <div class="alert-banner hidden" id="alertBanner">
+        <span class="ab-icon">⚠️</span>
+        <span class="ab-text">Synthetic voice detected — <strong id="abScore">0%</strong>. Don't share codes or money.</span>
+        <button class="ab-flag" id="abFlag">🚩 Flag</button>
+      </div>
+
+      <canvas id="waveform" class="waveform"></canvas>
+
+      <div class="meter-wrap">
+        <div class="meter-head">
+          <span class="verdict verdict-safe" id="verdict">Awaiting audio</span>
+          <span class="meter-pct"><span id="scorePct">--</span><small>%</small></span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill fill-safe" id="meterFill" style="width:0%"></div>
+          <div class="meter-threshold" id="thMark" style="left:60%"><span class="threshold-flag">alert</span></div>
+        </div>
+        <div class="meter-scale"><span>Authentic</span><span>Synthetic likelihood</span><span>Deepfake</span></div>
+      </div>
+
+      <div class="features" id="features"></div>
+    </section>
+
+    <!-- RIGHT: controls + gallery -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Voice Sample Gallery</h2>
+        <span class="dash-count"><span id="galleryCount">0</span> clips</span>
+      </div>
+      <p class="disclose">Samples are real spoken voices (system TTS). Uploads run the live on-device feature engine.</p>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <input type="text" id="search" placeholder="Search name, context, accent…" />
+        </div>
+        <div class="filters">
+          <button class="chip chip-active" data-filter="all">All</button>
+          <button class="chip" data-filter="human">Human</button>
+          <button class="chip" data-filter="ai">AI-Cloned</button>
+        </div>
+      </div>
+
+      <label class="dropzone" id="dropzone">
+        <input type="file" id="fileInput" accept="audio/*" hidden />
+        <span class="dz-icon">⬆️</span>
+        <span><strong>Upload / drop a real voice recording</strong> — analyzed on-device with full spectral feature extraction</span>
+      </label>
+
+      <div class="gallery" id="gallery"></div>
+
+      <div class="dash-block">
+        <div class="dash-label-row">
+          <span class="dash-label">Alert Sensitivity</span>
+          <span class="dash-value" id="thVal">60%</span>
+        </div>
+        <input type="range" min="30" max="90" value="60" class="slider" id="sensitivity" />
+        <div class="slider-ends"><span>More alerts</span><span>Fewer false positives</span></div>
+      </div>
+
+      <div class="dash-block">
+        <div class="dash-label-row">
+          <span class="dash-label">🚩 Flagged This Session</span>
+          <button class="btn-text sm" id="clearFlags">Clear</button>
+        </div>
+        <div class="flag-list" id="flagList"><p class="muted">No numbers flagged yet.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>VoiceGuard prototype · audio never leaves your device · GDPR / CCPA friendly</span>
+    <span>Targets: browser extension (WebRTC) + mobile app (VoIP)</span>
+  </footer>
+</div>
+
+<script src="app/detector.js?v=12"></script>
+<script src="app/voices.js?v=12"></script>
+<script src="app/main.js?v=12"></script>
+</body>
+</html>
